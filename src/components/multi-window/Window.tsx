@@ -31,7 +31,6 @@ export const Window = React.memo(
     const handleMouseDown =
       (type: 'drag' | 'resize', direction?: string) =>
       (event: React.MouseEvent) => {
-        // 1. Stop the event from bubbling up to the parent Paper component.
         event.stopPropagation()
         event.preventDefault()
         dispatch({
@@ -42,7 +41,8 @@ export const Window = React.memo(
 
     return (
       <Paper
-        // 2. Add the onMouseDown handler to the main window container.
+        role='dialog'
+        aria-labelledby={`window-title-${windowState.id}`}
         onMouseDown={() =>
           dispatch({ type: 'BRING_TO_FRONT', payload: { id: windowState.id } })
         }
@@ -88,7 +88,11 @@ export const Window = React.memo(
               <config.icon size={16} color='white' />
             </Avatar>
             <Box>
-              <Typography variant='subtitle2' fontWeight='bold'>
+              <Typography
+                id={`window-title-${windowState.id}`}
+                variant='subtitle2'
+                fontWeight='bold'
+              >
                 {config.title}
               </Typography>
               <Typography variant='caption' color='text.secondary'>
@@ -99,20 +103,24 @@ export const Window = React.memo(
           <Box sx={{ display: 'flex', gap: 1 }}>
             <IconButton
               size='small'
-              onClick={() =>
+              aria-label={windowState.isMaximized ? 'Minimize' : 'Maximize'}
+              onClick={(e) => {
+                e.stopPropagation()
                 dispatch({
                   type: 'TOGGLE_MAXIMIZE',
                   payload: { id: windowState.id },
                 })
-              }
+              }}
             >
               <MaximizeIcon size={16} />
             </IconButton>
             <IconButton
               size='small'
-              onClick={() =>
+              aria-label='Close'
+              onClick={(e) => {
+                e.stopPropagation()
                 dispatch({ type: 'CLOSE', payload: { id: windowState.id } })
-              }
+              }}
             >
               <X size={16} />
             </IconButton>
