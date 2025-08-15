@@ -16,6 +16,7 @@ const contentMapping = {
 interface WindowProps {
   windowState: WindowState
   isActive: boolean
+  isInteracting?: boolean
   dispatch: React.Dispatch<Action>
 }
 
@@ -23,7 +24,7 @@ const HEADER_HEIGHT = 60
 const BORDER_WIDTH = 2
 
 export const Window = React.memo(
-  ({ windowState, isActive, dispatch }: WindowProps) => {
+  ({ windowState, isActive, dispatch, isInteracting }: WindowProps) => {
     const config = WINDOW_CONFIGS[windowState.type]
     const ContentComponent = contentMapping[windowState.type]
     const MaximizeIcon = windowState.isMaximized ? Minimize2 : Maximize2
@@ -60,10 +61,12 @@ export const Window = React.memo(
           border: isActive
             ? `${BORDER_WIDTH}px solid rgba(59,130,246,0.6)`
             : `${BORDER_WIDTH}px solid rgba(59,130,246,0.2)`,
-          boxShadow: isActive
+          boxShadow: isInteracting
+            ? '0 15px 35px rgba(59,130,246,0.20)'
+            : isActive
             ? '0 25px 50px rgba(59,130,246,0.25)'
             : '0 15px 35px rgba(59,130,246,0.15)',
-          transition: 'all 0.3s ease',
+          transition: isInteracting ? 'none' : 'all 0.3s ease',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',

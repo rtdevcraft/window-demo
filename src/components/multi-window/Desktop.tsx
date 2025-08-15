@@ -25,6 +25,7 @@ export const Desktop = ({ state, dispatch }: DesktopProps) => {
           windowState={window}
           isActive={window.id === activeWindowId}
           dispatch={dispatch}
+          isInteracting={state.interaction.windowId === window.id}
         />
       ))}
     </Box>
